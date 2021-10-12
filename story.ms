@@ -1,5 +1,13 @@
+.TL
 ROTTEN:
 
+.AU
+Erarnitox - David Partsch
+
+.NH
+Abstract
+
+.PP
 It's 2049 and we are living in a world of complete surveilance and inforamation control.
 However, there is an anarchistic piece of land occupied with punks and hackers fighting
 privacy and internet freedom.
