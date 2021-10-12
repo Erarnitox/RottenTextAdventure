@@ -17,8 +17,8 @@ public:
 		return target;
 	}
 
-	void setText(char* text){
-		this->text = text;
+	void setText(const char* text){
+		this->text = const_cast<char*>(text);
 	}
 	
 	void setTarget(unsigned target){
@@ -32,13 +32,14 @@ class Area{
 	const char* picture;
 	unsigned lastOption{0};
 	Option options[OPT_SIZE]{};
-	
+	int items[20]{};	
+
 public:
 	Area(const char* const name, const std::string& description, const char* picture):
 		name{name}, description{description}, picture{picture}{
 			//constrctor body	
 		}
-	void addOption(char* text, unsigned target){
+	void addOption(const char* text, unsigned target){
 		if(!(lastOption < OPT_SIZE)) return;
 		options[lastOption].setText(text);
 		options[lastOption++].setTarget(target);
@@ -46,11 +47,12 @@ public:
 
 	unsigned select(char c=0){
 		std::cout << "\033[2J\033[1;1H";
-		printf("%s:\n%s", name, picture);
-		std::cout << "\n" <<  description << "\n";
+		printf("[%s]:\n%s", name, picture);
+		std::cout << "\n" <<  description << "\n\n";
 		std::cout << "WHAT DO YOU DO?:\n";
 	
 		static unsigned sel{0};
+		unsigned tmp{sel};
 
 		switch(c){
 			case 'j':
@@ -62,7 +64,15 @@ public:
 			break;
 			
 			case 's':
-				return options[sel].getTarget();
+				tmp=sel;
+				sel=0;
+				c=0;
+				return options[tmp].getTarget();
+			break;
+
+			case ':':
+				c=0;
+				return 666;
 			break;
 
 			case 0:
@@ -70,9 +80,12 @@ public:
 			break;
 		}
 
-		for(unsigned i{}; i < lastOption; ++i){
+		puts(" ----------------------------------------------------------- ");
+		for(unsigned i{0}; i < lastOption; ++i){
 			printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
 		}
+		puts(" ----------------------------------------------------------- ");
+
 		return 1337; 
 	}
 };
