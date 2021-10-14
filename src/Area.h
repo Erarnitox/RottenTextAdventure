@@ -10,9 +10,11 @@ public:
 	Option(char* text=nullptr, unsigned target=0):
 		text{text}, target{target}{
 		}
+
 	const char* getText(){
 		return text;
 	}
+
 	unsigned getTarget(){
 		return target;
 	}
@@ -28,28 +30,26 @@ public:
 
 class Area{
 	const char* name;
-	const std::string description;
+	const char* description;
 	const char* picture;
 	unsigned lastOption{0};
 	Option options[OPT_SIZE]{};
-	int items[20]{};	
+	//int items[20]{};	
 
 public:
-	Area(const char* const name, const std::string& description, const char* picture):
+	Area(const char* const name=nullptr, const char* description=nullptr, const char* picture=nullptr):
 		name{name}, description{description}, picture{picture}{
 			//constrctor body	
 		}
-	void addOption(const char* text, unsigned target){
-		if(!(lastOption < OPT_SIZE)) return;
+	Area& addOption(const char* text, unsigned target){
+		if(!(lastOption < OPT_SIZE)) return *this;
 		options[lastOption].setText(text);
 		options[lastOption++].setTarget(target);
+		return *this;
 	}
 
 	unsigned select(char c=0){
-		std::cout << "\033[2J\033[1;1H";
-		printf("[%s]:\n%s", name, picture);
-		std::cout << "\n" <<  description << "\n\n";
-		std::cout << "WHAT DO YOU DO?:\n";
+		printf("\033[2J\033[1;1H[%s]:\n%s\n%s\n\nWHAT DO YOU DO?\n", name, picture, description);
 	
 		static unsigned sel{0};
 		unsigned tmp{sel};
@@ -89,3 +89,15 @@ public:
 		return 1337; 
 	}
 };
+
+Area* createAreas(){
+	static Area tmp[]{
+		//first Room:
+		Area("First Room", "Everybody starts somewhere!", "(*.*)").addOption("Go to second Room", 1).addOption("Stay here...", 0),
+
+		//first Room:
+		Area("Another Room", "wow another room!", "(*___*)").addOption("Go to second Room", 1).addOption("Stay here...", 0)
+	};
+	return tmp;
+};
+

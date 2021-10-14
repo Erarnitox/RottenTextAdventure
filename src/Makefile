@@ -11,4 +11,4 @@ clean:
 	rm -rf ../bin/*
 	
 run:
-	../bin/rotten.bin
+	../bin/rotten.elf

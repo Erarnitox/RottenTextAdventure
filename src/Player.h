@@ -57,4 +57,5 @@ public:
    void profile();
    void inventory(const char* action); 
    void take(const unsigned& id);
+   void command(const std::string& cmd);
 };

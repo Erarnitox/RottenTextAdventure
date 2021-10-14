@@ -7,6 +7,10 @@ Player::Player(){
 
 }
 
+void Player::command(const std::string& cmd){
+	//std::cout << "COMMAND: " << cmd << std::endl;
+}
+
 void Player::explore(const char* location){
 	std::cout << "Start exploring " << (location? location : "Wasteland of Zion")         << "...\n";
 }
