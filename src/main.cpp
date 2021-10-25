@@ -13,11 +13,18 @@ int main(){
    
    std::string input;
    
-   //query for save game:
-   //bool newGame{true};
+   //query for save game: bool newGame{true};
    
    //create our player:
    Player player;
+
+   //create Items:
+   Area::addItem("Key");
+   Area::addItem("Stick");
+   Area::addItem("Caps");
+   Area::addItem("Scrap Metal");
+   Area::addItem("Computer Parts");
+   Area::addItem("Knife");
 
    //create our game world:
    Area* areas = createAreas();

@@ -2,6 +2,10 @@
 #include <stdio.h>
 
 constexpr unsigned  OPT_SIZE{5};
+constexpr unsigned  ITEM_SIZE{5};
+
+unsigned itemCount;
+const char* itemNames[ITEM_SIZE];
 
 class Option{
 	char* text;
@@ -29,14 +33,17 @@ public:
 };
 
 class Area{
+	bool hasItems{false};
 	const char* name;
 	const char* description;
 	const char* picture;
+	unsigned usedItemSlots{0};
 	unsigned lastOption{0};
 	Option options[OPT_SIZE]{};
-	//int items[20]{};	
+	int items[ITEM_SIZE]{};	
 
 public:
+
 	Area(const char* const name=nullptr, const char* description=nullptr, const char* picture=nullptr):
 		name{name}, description{description}, picture{picture}{
 			//constrctor body	
@@ -48,10 +55,48 @@ public:
 		return *this;
 	}
 
+	Area& addItem(const int itemId, const int count){
+		if(itemCount<= itemId) return *this;
+		++usedItemSlots;
+		hasItems = true;
+		items[itemId] += count;
+		return *this;
+	}
+
+	Area& removeItem(unsigned& itemSel){
+		if(!hasItems) return *this;
+		const unsigned itemId{itemSel};
+
+		if(itemCount>0 && itemId<itemCount){
+			--items[itemId];
+			if(!items[itemId]){
+				--usedItemSlots;
+				if(!usedItemSlots) hasItems = false;
+				else{
+					do{
+						if(itemSel) --itemSel;
+						else itemSel = itemCount-1;
+					}while(!items[itemSel]);
+				}
+			}
+		}
+		return *this;
+	};
+
+
+	static void addItem(const char* itemName){
+		static bool initialized{false};
+		if(!initialized) itemCount = 0;
+		initialized = true;
+		if(itemCount < ITEM_SIZE)
+			itemNames[itemCount++] = itemName;
+	};
+
 	unsigned select(char c=0){
 		printf("\033[2J\033[1;1H[%s]:\n%s\n%s\n\nWHAT DO YOU DO?\n", name, picture, description);
 	
 		static unsigned sel{0};
+		static unsigned itemSel{0};
 		unsigned tmp{sel};
 
 		switch(c){
@@ -62,10 +107,29 @@ public:
 				if(sel) --sel;
 				else sel = lastOption-1;
 			break;
+
+			case 'l':
+				if(!hasItems) break;
+				do{
+					++itemSel %= itemCount;
+				}while(!items[itemSel]);
+			break;
+			case 'h':
+				if(!hasItems) break;
+				do{
+					if(itemSel) --itemSel;
+					else itemSel = itemCount-1;
+				}while(!items[itemSel]);
+			break;
+
+			case 't':
+				removeItem(itemSel);
+			break;
 			
 			case 's':
 				tmp=sel;
 				sel=0;
+				itemSel=0;
 				c=0;
 				return options[tmp].getTarget();
 			break;
@@ -79,8 +143,18 @@ public:
 			default:
 			break;
 		}
+		
+		if(hasItems){
+			printf("Used item slots: %d\n", usedItemSlots);
+			puts(" ---------------------ITEMS:-------------------------------- ");
 
-		puts(" ----------------------------------------------------------- ");
+			for(unsigned i{0}; i < itemCount; ++i){
+				if(items[i]) printf("%c[%dx %s] ",itemSel==i?'*':' ', items[i], itemNames[i]);
+			}
+			puts("");
+		}
+
+		puts(" ---------------------OPTIONS:------------------------------ ");
 		for(unsigned i{0}; i < lastOption; ++i){
 			printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
 		}
@@ -93,10 +167,17 @@ public:
 Area* createAreas(){
 	static Area tmp[]{
 		//first Room:
-		Area("First Room", "Everybody starts somewhere!", "(*.*)").addOption("Go to second Room", 1).addOption("Stay here...", 0),
+		Area("First Room", "Everybody starts somewhere!", "(*.*)")\
+		.addOption("Go to second Room", 1)\
+		.addOption("Stay here...", 0)\
+		.addItem(3, 20)\
+		.addItem(2, 6)\
+		.addItem(0, 1),
 
 		//first Room:
-		Area("Another Room", "wow another room!", "(*___*)").addOption("Go to second Room", 1).addOption("Stay here...", 0)
+		Area("Another Room", "wow another room!", "(*___*)")\
+		.addOption("Go back", 0)\
+		.addOption("Stay here...", 1)
 	};
 	return tmp;
 };
