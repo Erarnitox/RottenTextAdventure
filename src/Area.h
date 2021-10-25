@@ -1,8 +1,8 @@
 #pragma once
 #include <stdio.h>
 
-constexpr unsigned  OPT_SIZE{5};
-constexpr unsigned  ITEM_SIZE{5};
+constexpr unsigned  OPT_SIZE{15};
+constexpr unsigned  ITEM_SIZE{15};
 
 unsigned itemCount;
 const char* itemNames[ITEM_SIZE];
@@ -149,6 +149,7 @@ public:
 			puts(" ---------------------ITEMS:-------------------------------- ");
 
 			for(unsigned i{0}; i < itemCount; ++i){
+				if(!(i%5)) puts("");
 				if(items[i]) printf("%c[%dx %s] ",itemSel==i?'*':' ', items[i], itemNames[i]);
 			}
 			puts("");
@@ -156,7 +157,7 @@ public:
 
 		puts(" ---------------------OPTIONS:------------------------------ ");
 		for(unsigned i{0}; i < lastOption; ++i){
-			printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
+			if((i<5&&sel<5) || sel-i < 5) printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
 		}
 		puts(" ----------------------------------------------------------- ");
 
@@ -170,9 +171,19 @@ Area* createAreas(){
 		Area("First Room", "Everybody starts somewhere!", "(*.*)")\
 		.addOption("Go to second Room", 1)\
 		.addOption("Stay here...", 0)\
+		.addOption("Stay here, dude!...", 0)\
+		.addOption("just stay...", 0)\
+		.addOption("Stay...", 0)\
+		.addOption("Stay at home...", 0)\
+		.addOption("Stay here!", 0)\
+		.addOption("Stay for real...", 0)\
 		.addItem(3, 20)\
 		.addItem(2, 6)\
-		.addItem(0, 1),
+		.addItem(0, 1)\
+		.addItem(7, 1)\
+		.addItem(6, 1)\
+		.addItem(8, 1)\
+		.addItem(9, 1),
 
 		//first Room:
 		Area("Another Room", "wow another room!", "(*___*)")\

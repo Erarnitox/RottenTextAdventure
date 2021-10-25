@@ -25,6 +25,11 @@ int main(){
    Area::addItem("Scrap Metal");
    Area::addItem("Computer Parts");
    Area::addItem("Knife");
+   Area::addItem("Pistol");
+   Area::addItem("Thinkpad");
+   Area::addItem("Wifi Pineapple");
+   Area::addItem("Armor");
+   Area::addItem("Rubber Ducky");
 
    //create our game world:
    Area* areas = createAreas();
