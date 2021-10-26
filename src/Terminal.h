@@ -1,33 +1,20 @@
 #pragma once
 
 #include <termios.h>
-class BufferToggle
-{
-	    private:
-			        struct termios t;
+#include <unistd.h>
 
-					    public:
+class BufferToggle{
+	struct termios t;
+public:
+	void off(void){
+		tcgetattr(STDIN_FILENO, &t); 
+		t.c_lflag &= ~ICANON; 
+		tcsetattr(STDIN_FILENO, TCSANOW, &t);
+	}
 
-					        /*
-							 *          * Disables buffered input
-							 *                   */
-
-					        void off(void)
-								        {
-											            tcgetattr(STDIN_FILENO, &t); //get the current terminal I/O structure
-														            t.c_lflag &= ~ICANON; //Manipulate the flag bits to do what you want it to do
-																	            tcsetattr(STDIN_FILENO, TSCANOW, &t); //Apply the new settings
-																				        }
-
-
-							        /*
-									 *          * Enables buffered input
-									 *                   */
-
-							        void on(void)
-										        {
-													            tcgetattr(STDIN_FILENO, &t); //get the current terminal I/O structure
-																            t.c_lflag |= ICANON; //Manipulate the flag bits to do what you want it to do
-																			            tcsetattr(STDIN_FILENO, TSCANOW, &t); //Apply the new settings
-																						        }
+	void on(void){
+		tcgetattr(STDIN_FILENO, &t); 
+		t.c_lflag |= ICANON;
+		tcsetattr(STDIN_FILENO, TCSANOW, &t);
+	}
 };

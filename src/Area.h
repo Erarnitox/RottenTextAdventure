@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include "Player.h"
 
 constexpr unsigned  OPT_SIZE{15};
 constexpr unsigned  ITEM_SIZE{15};
@@ -46,7 +47,7 @@ public:
 
 	Area(const char* const name=nullptr, const char* description=nullptr, const char* picture=nullptr):
 		name{name}, description{description}, picture{picture}{
-			//constrctor body	
+			//constructor body	
 		}
 	Area& addOption(const char* text, unsigned target){
 		if(!(lastOption < OPT_SIZE)) return *this;
@@ -55,7 +56,7 @@ public:
 		return *this;
 	}
 
-	Area& addItem(const int itemId, const int count){
+	Area& addItem(const unsigned itemId, const unsigned count){
 		if(itemCount<= itemId) return *this;
 		++usedItemSlots;
 		hasItems = true;
@@ -63,7 +64,7 @@ public:
 		return *this;
 	}
 
-	Area& removeItem(unsigned& itemSel){
+	Area& takeItem(unsigned& itemSel){
 		if(!hasItems) return *this;
 		const unsigned itemId{itemSel};
 
@@ -123,7 +124,7 @@ public:
 			break;
 
 			case 't':
-				removeItem(itemSel);
+				takeItem(itemSel);
 			break;
 			
 			case 's':
@@ -145,19 +146,23 @@ public:
 		}
 		
 		if(hasItems){
-			printf("Used item slots: %d\n", usedItemSlots);
 			puts(" ---------------------ITEMS:-------------------------------- ");
-
 			for(unsigned i{0}; i < itemCount; ++i){
 				if(!(i%5)) puts("");
+				if(itemSel==i) printf("\033[1;33m\033[1;42m");
 				if(items[i]) printf("%c[%dx %s] ",itemSel==i?'*':' ', items[i], itemNames[i]);
+				if(itemSel==i) printf("\033[0m");
 			}
 			puts("");
 		}
 
 		puts(" ---------------------OPTIONS:------------------------------ ");
 		for(unsigned i{0}; i < lastOption; ++i){
-			if((i<5&&sel<5) || sel-i < 5) printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
+			if((i<5&&sel<5) || sel-i < 5){
+				if(sel==i) printf("\033[1;33m\033[1;42m");
+				printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
+				if(sel==i) printf("\033[0m");
+			}
 		}
 		puts(" ----------------------------------------------------------- ");
 

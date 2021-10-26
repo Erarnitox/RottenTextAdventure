@@ -5,6 +5,9 @@
 #include <filesystem>
 #include <stdio.h>
 
+//third party headers:
+#include "Terminal.h"
+
 //game specific includes:
 #include "Player.h"
 #include "Area.h"
@@ -34,23 +37,25 @@ int main(){
    //create our game world:
    Area* areas = createAreas();
 
-   //TODO: turn off input buffering:
+   //tun off buffered input:
+   BufferToggle bf;
+   bf.off();
 	
    //game loop:
    do{
 	   static char c{0};
 	   static unsigned tmp{1337};
 	   static unsigned selection{0};
-
-       tmp = areas[selection].select(c);
 	  
+       tmp = areas[selection].select(c);
+
 	   //if player command entered:
 	   if(tmp == 666){
-		   //TODO: Enable buffered input
-		   //std::cout << ":";
+		   bf.on();
+		   std::cout << ":";
 		   std::getline(std::cin >> std::ws, input);
 		   player.command(input);
-		   //Disable buffered input
+		   bf.off();
 		   tmp = 1337;
 		   c = 0;
 		   continue;
