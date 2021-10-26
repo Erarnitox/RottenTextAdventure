@@ -24,6 +24,8 @@ Alternatively the compiled binary can be found in the `bin` directory.
 - `l` : select next item
 - `h` : select previous item
 - `:` : open console for commands
+- `t` : take selected item 
+- `s` : choose the selected option
 
 #### Commands:
 - `q` : quit the game
