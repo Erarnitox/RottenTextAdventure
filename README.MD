@@ -1,4 +1,9 @@
+**Note: This is under development and is not in any playable state yet**
+
 # ROTTEN
+
+![screeshot.png](https://cdn.discordapp.com/attachments/814530214838927371/902690543723769896/unknown.png)
+
 Rotten is a simple text adventure game with vim
 like input keys.
 
@@ -23,7 +28,7 @@ Alternatively the compiled binary can be found in the `bin` directory.
 - `k` : select previous option
 - `l` : select next item
 - `h` : select previous item
-- `:` : open console for commands
+- `:` : open console for commands and custom options
 - `t` : take selected item 
 - `s` : choose the selected option
 
