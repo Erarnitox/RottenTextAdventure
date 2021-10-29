@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 struct Command{
    char keyword[20];
    void* function;
@@ -25,10 +27,6 @@ struct Skills{
    unsigned hiding;
 };
 
-struct Items{
-   unsigned id;
-};
-
 struct Position{
     long x, y;
 };
@@ -36,12 +34,14 @@ struct Position{
 class Player{
    struct Attributes attributes{};
    struct Skills skills{};
-   struct Items items[6];
    struct Position position;
 
    std::string name;
    bool isMale{true};
-
+   
+   unsigned hasItems{0};
+   unsigned items[15]{};
+   const char* itemNames[15]{};
    unsigned maxHealth{100};
    unsigned health{100};
    unsigned stamina{100};
@@ -49,13 +49,15 @@ class Player{
    int cryptoCoin{0};
    unsigned level{1};
    int expToNext{100};
+   
+   void dropItem(std::stringstream& commandStream);
   
 public:
    Player();
    void explore(const char* location = nullptr);
    void help(const char* matter = nullptr);
    void profile();
-   void inventory(const char* action); 
-   void take(const unsigned& id);
+   bool inventory(); 
+   void take(const unsigned& id, const char* itemName);
    void command(const std::string& cmd);
 };

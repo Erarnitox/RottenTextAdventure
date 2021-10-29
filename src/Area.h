@@ -1,4 +1,5 @@
 #pragma once
+
 #include <stdio.h>
 #include "Player.h"
 
@@ -64,12 +65,13 @@ public:
 		return *this;
 	}
 
-	Area& takeItem(unsigned& itemSel){
+	Area& takeItem(Player& player, unsigned& itemSel){
 		if(!hasItems) return *this;
 		const unsigned itemId{itemSel};
 
 		if(itemCount>0 && itemId<itemCount){
 			--items[itemId];
+			player.take(itemId, itemNames[itemId]);
 			if(!items[itemId]){
 				--usedItemSlots;
 				if(!usedItemSlots) hasItems = false;
@@ -93,7 +95,7 @@ public:
 			itemNames[itemCount++] = itemName;
 	};
 
-	unsigned select(char c=0){
+	unsigned select(Player& player, char c=0){
 		printf("\033[2J\033[1;1H[%s]:\n%s\n%s\n\nWHAT DO YOU DO?\n", name, picture, description);
 	
 		static unsigned sel{0};
@@ -124,7 +126,7 @@ public:
 			break;
 
 			case 't':
-				takeItem(itemSel);
+				takeItem(player, itemSel);
 			break;
 			
 			case 's':
@@ -138,6 +140,11 @@ public:
 			case ':':
 				c=0;
 				return 666;
+			break;
+
+			case 'i':
+				c=0;
+				return 717;
 			break;
 
 			case 0:

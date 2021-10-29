@@ -20,6 +20,7 @@ int main(){
    
    //create our player:
    Player player;
+   //bool openedInventory{false};
 
    //create Items:
    Area::addItem("Key");
@@ -47,7 +48,14 @@ int main(){
 	   static unsigned tmp{1337};
 	   static unsigned selection{0};
 	  
-       tmp = areas[selection].select(c);
+       tmp = areas[selection].select(player, c);
+
+	   //open inventory:
+	   if(tmp == 717){
+		   //openedInventory = 
+		   player.inventory();
+		   tmp = 666;
+	   }
 
 	   //if player command entered:
 	   if(tmp == 666){
@@ -61,8 +69,8 @@ int main(){
 		   continue;
 	   }
 
-	   //if the target didn't change 
-	   if(tmp != 1337){
+	   //if the target did change 
+	   else if(tmp != 1337){
 		   selection = tmp;
 		   tmp = 1337;
 		   c=0;
