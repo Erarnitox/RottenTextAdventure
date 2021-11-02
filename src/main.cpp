@@ -79,4 +79,7 @@ int main(){
 
 	   std::cin >> c;
    }while(input != "q");
+   
+   bf.on();
+return 0;
 }

@@ -21,7 +21,7 @@ void Player::command(const std::string& cmd){
         if(tmp == "okay"){
             //doing nothing
         }else if(tmp == "use"){
-            this->dropItem(commandStream);
+            //this->dropItem(commandStream);
         }else if(tmp == "drop"){
             this->dropItem(commandStream);
         }else{
@@ -34,7 +34,7 @@ void Player::dropItem(std::stringstream& commandStream){
     unsigned itemId;
     unsigned count;
             
-    if (commandStream.tellp() == std::streampos(0)) commandStream >> itemId;
+    if (commandStream.tellp() !=  std::char_traits<char>::eof()) commandStream >> itemId;
     else{
         for(unsigned i{0}; i < 15; ++i){
             if(items[i]){
@@ -45,7 +45,7 @@ void Player::dropItem(std::stringstream& commandStream){
         if(!items[itemId]) return;
     }
     
-    if (commandStream.tellp() == std::streampos(0)) commandStream >> count;
+    if (commandStream.tellp() !=  std::char_traits<char>::eof()) commandStream >> count;
     else count = 1;
     
     if(itemId > 14) return;
