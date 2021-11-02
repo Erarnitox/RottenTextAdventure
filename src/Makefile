@@ -7,7 +7,7 @@ rotten.elf: ../bin/dbg/main.o ../bin/dbg/Player.o
 ../bin/dbg/Player.o: Player.h Player.cpp
 	g++ -Wall -g -c Player.cpp -o ../bin/dbg/Player.o
 
-release: ../bin/stbl/main.o ../bin/stbl/Player.o
+release: ../bin/stbl/main.o ../bin/stbl/Player.o ../bin/stbl/story.pdf
 	g++ -O3 -s -Wall ../bin/stbl/main.o ../bin/stbl/Player.o -o ../bin/stbl/ROTTEN
 
 ../bin/stbl/main.o: main.cpp Area.h
@@ -15,6 +15,9 @@ release: ../bin/stbl/main.o ../bin/stbl/Player.o
 
 ../bin/stbl/Player.o: Player.h Player.cpp
 	g++ -O3 -Wall -c Player.cpp -o ../bin/stbl/Player.o
+
+../bin/stbl/story.pdf: ../story.ms
+	groff -mspdf -Tpdf ../story.ms  > ../bin/stbl/story.pdf
 
 clean:
 	rm -rf ../bin/dbg/*; rm -rf ../bin/stbl/*
