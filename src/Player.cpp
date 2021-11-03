@@ -31,29 +31,33 @@ void Player::command(const std::string& cmd){
 }
 
 void Player::dropItem(std::stringstream& commandStream){
-    unsigned itemId;
-    unsigned count;
+    unsigned itemId{0};
+    unsigned count{0};
             
-    if (commandStream.tellp() !=  std::char_traits<char>::eof()) commandStream >> itemId;
-    else{
+    if (commandStream.rdbuf()->in_avail()){
+		commandStream >> itemId;
+	}else{
         for(unsigned i{0}; i < 15; ++i){
-            if(items[i]){
+            if(this->items[i] > 0){
                 itemId = i;
-                return;
+                break;
             }
         }
-        if(!items[itemId]) return;
+        if(!items[itemId]){
+			this->hasItems = 0;
+			return;
+		}
     }
     
-    if (commandStream.tellp() !=  std::char_traits<char>::eof()) commandStream >> count;
+    if (commandStream.rdbuf()->in_avail()) commandStream >> count;
     else count = 1;
     
     if(itemId > 14) return;
     if(count < this->items[itemId]){
         this->items[itemId] -= count;
-        --this->items[itemId];
+		this->hasItems -= count;
     }else{
-        --this->hasItems = items[itemId];
+        --this->hasItems;
         this->items[itemId] = 0;
     }
 }
@@ -62,12 +66,12 @@ void Player::explore(const char* location){
 	std::cout << "Start exploring " << (location? location : "Wasteland of Zion") << "...\n";
 }
 
-void Player::help(const char* matter){
+//void Player::help(const char* matter){
 	/*
 	for(auto c : commands){
 	    c.usage();	
 	}*/
-}
+//}
 
 bool Player::inventory(){
     if(!this->hasItems){

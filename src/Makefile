@@ -1,11 +1,11 @@
 rotten.elf: ../bin/dbg/main.o ../bin/dbg/Player.o
-	g++ -g -Wall ../bin/dbg/main.o ../bin/dbg/Player.o -o ../bin/dbg/rotten.elf
+	g++ -g -pedantic -Werror -Wall -Wextra -Wconversion -Woverloaded-virtual ../bin/dbg/main.o ../bin/dbg/Player.o -o ../bin/dbg/rotten.elf
 
 ../bin/dbg/main.o: main.cpp Area.h
-	g++ -Wall -g -c main.cpp -o ../bin/dbg/main.o
+	g++ -pedantic -Werror -Wall -Wextra -Wconversion -Woverloaded-virtual -g -c main.cpp -o ../bin/dbg/main.o
 
 ../bin/dbg/Player.o: Player.h Player.cpp
-	g++ -Wall -g -c Player.cpp -o ../bin/dbg/Player.o
+	g++ -pedantic -Werror -Wall -Wextra -Wconversion -Woverloaded-virtual -g -c Player.cpp -o ../bin/dbg/Player.o
 
 release: ../bin/stbl/main.o ../bin/stbl/Player.o ../bin/stbl/story.pdf
 	g++ -O3 -s -Wall ../bin/stbl/main.o ../bin/stbl/Player.o -o ../bin/stbl/ROTTEN
