@@ -4,7 +4,7 @@
 #include "Player.h"
 
 constexpr unsigned  OPT_SIZE{15};
-constexpr unsigned  ITEM_SIZE{15};
+//constexpr unsigned  ITEM_SIZE{15};
 
 unsigned itemCount;
 const char* itemNames[ITEM_SIZE];
@@ -12,10 +12,106 @@ const char* itemNames[ITEM_SIZE];
 class Option{
 	char* text;
 	unsigned target;
+	unsigned reqAttribId;
+	unsigned reqAttribCount;
+	unsigned reqSkillId;
+	unsigned reqSkillPoints;
+	unsigned reqItemId;
+	unsigned reqItemCount;
+	
 public:
-	Option(char* text=nullptr, unsigned target=0):
-		text{text}, target{target}{
+	Option(char* text=nullptr, 	unsigned target=0,
+	unsigned reqAttribId=0, 	unsigned reqAttribCount=0,
+	unsigned reqSkillId=0, 		unsigned reqSkillPoints=0, 
+	unsigned reqItemId=80085, 	unsigned reqItemCount=0):
+		text{text},					target{target},
+		reqAttribId{reqAttribId}, 	reqAttribCount{reqAttribCount},
+		reqSkillId{reqSkillId}, 	reqSkillPoints{reqSkillPoints},
+		reqItemId{reqItemId}, 		reqItemCount{reqItemCount}{
 		}
+	
+	bool isAvailable(const Player& player) const{
+		//check Attributes
+		switch(reqAttribId){
+			//perception:
+			case 1:
+				if(player.attributes.perception < reqAttribCount)
+					return false;
+			break;
+
+			//endurance:
+			case 2:
+				if(player.attributes.endurance < reqAttribCount)
+					return false;
+			break;
+
+			//resiliance:
+			case 3:
+				if(player.attributes.resiliance < reqAttribCount)
+					return false;
+			break;
+
+			//strength:
+			case 4:
+				if(player.attributes.strength < reqAttribCount)
+					return false;
+			break;
+
+			//intelligence:
+			case 5:
+				if(player.attributes.intelligence < reqAttribCount)
+					return false;
+			break;
+
+			//luck:
+			case 6:
+				if(player.attributes.luck < reqAttribCount)
+					return false;
+			break;
+		}
+		//check Skills
+		switch(reqSkillId){
+			//hacking
+			case 1:
+				if(player.skills.hacking < reqSkillPoints)
+					return false;
+			break;
+	
+			//programming
+			case 2:
+				if(player.skills.programming< reqSkillPoints)
+					return false;
+			break;
+		
+			//soldering
+			case 3:
+				if(player.skills.soldering< reqSkillPoints)
+					return false;
+			break;
+
+			//lockPicking
+			case 4:
+				if(player.skills.lockPicking< reqSkillPoints)
+					return false;
+			break;
+
+			//climbing
+			case 5:
+				if(player.skills.climbing< reqSkillPoints)
+					return false;
+			break;
+
+			//hiding
+			case 6:
+				if(player.skills.hiding< reqSkillPoints)
+					return false;
+			break;
+
+		}
+		
+		if(reqItemId == 80085) return true;
+		return player.hasItem(reqItemId, reqItemCount);
+	}
 
 	const char* getText(){
 		return text;
@@ -31,6 +127,18 @@ public:
 	
 	void setTarget(unsigned target){
 		this->target = target;
+	}
+
+	void setRequirements(
+	unsigned attribId=0, 	unsigned attribCount=0,
+	unsigned skillId=0,  	unsigned skillPoints=0,
+	unsigned itemId=80085, 	unsigned itemCount=0){
+		this->reqAttribId = attribId;
+		this->reqAttribCount = attribCount;
+		this->reqSkillId = skillId;
+		this->reqSkillPoints = skillPoints;
+		this->reqItemId = itemId;
+		this->reqItemCount = itemCount;
 	}
 };
 
@@ -50,10 +158,15 @@ public:
 		name{name}, description{description}, picture{picture}{
 			//constructor body	
 		}
-	Area& addOption(const char* text, unsigned target){
+	Area& addOption(const char* text, unsigned target, 
+	unsigned attribId=0, 	unsigned attribCount=0, 
+	unsigned skillId=0, 	unsigned skillPoints=0,
+	unsigned itemId=80085, 	unsigned itemCount=0){
 		if(!(lastOption < OPT_SIZE)) return *this;
 		options[lastOption].setText(text);
-		options[lastOption++].setTarget(target);
+		options[lastOption].setTarget(target);
+		options[lastOption].setRequirements(attribId, attribCount, skillId, skillPoints, itemId, itemCount);
+		++lastOption;
 		return *this;
 	}
 
@@ -165,6 +278,7 @@ public:
 
 		puts(" ---------------------OPTIONS:------------------------------ ");
 		for(unsigned i{0}; i < lastOption; ++i){
+			if(!options[i].isAvailable(player)) continue;
 			if((i<5&&sel<5) || sel-i < 5){
 				if(sel==i) printf("\033[1;33m\033[1;42m");
 				printf(" %c [%s]\n", (sel != i)?' ':'>', options[i].getText());
@@ -180,24 +294,33 @@ public:
 Area* createAreas(){
 	static Area tmp[]{
 		//first Room:
-		Area("First Room", "Everybody starts somewhere!", "(*.*)")\
-		.addOption("Go to second Room", 1)\
+		Area("Hello World!", "You wake up in a small Shed", 
+		" _____________________________________________\n"
+		"|.'',                                     ,''.|\n"
+		"|.'.'',                                 ,''.'.|\n"
+		"|.'.'.'',                             ,''.'.'.|\n"
+		"|.'.'.'.'',_________________________,''.'.'.'.|\n"
+		"|.'.'.'.'.|.,.,.,.,.,.,.,.,.,.,.,.,.|.'.'.'.'.|\n"
+		"|.'.'.'.'.|.,.,.,.,.,.,.,.,.,.,.,.,.|.'.'.'.'.|\n"
+		"|.'.'.'.'.|.,.,.,.,.,.,.,.,.,.,.,.,.|.'.'.'.'.|\n"
+		"|.'.'.'.'.|.,.,.,.,.,.,.,.,.,.,.,.,.|.'.'.'.'.|\n"
+		"|.'.'.'.'.|.,.,.,.,--------.,.,.,.,.|.'.'.'.'.|\n"
+		"|,',',',',|.,.,.,.,||||||||.,.,.,.,.|,',',',',|\n"
+		"|.'.'.'.'.|.,.,.,.,||||||||.,.,.,.,.|.'.'.'.'.|\n"
+		"|.'.'.'.'.|.,.,.,.,|-||||||.,.,.,.,.|,.'.'.'.'|\n"
+		"|.'.'.'.'.|.,.,.,.,||||||||.,.,.,.,.|..'.'.'.'|\n"
+		"|.'.'.'.'.|.,.,.,.,||||||||.,.,.,.,.|.'.'.'.'.|\n"
+		"|.'.'.'.','_________________________|','.'.'.'|\n"
+		"|.'.'.','        /%%%%%%%%%%%\\        ','.'.'.|\n"
+		"|.'.','         /%%%%%%%%%%%%%\\         ','.'.|\n"
+		"|.','          /%%%%%%%%%%%%%%%\\          ','.|\n"
+		"|;____________/%%%%%%%%%%%%%%%%%\\____________;|\n")\
+		.addOption("Go Outside", 1, ATTRIB_NONE, 0, SKILL_NONE, 0, ITEM_SHED_KEY, 1)\
 		.addOption("Stay here...", 0)\
-		.addOption("Stay here, dude!...", 0)\
-		.addOption("just stay...", 0)\
-		.addOption("Stay...", 0)\
-		.addOption("Stay at home...", 0)\
-		.addOption("Stay here!", 0)\
-		.addOption("Stay for real...", 0)\
-		.addItem(3, 20)\
-		.addItem(2, 6)\
-		.addItem(0, 1)\
-		.addItem(7, 1)\
-		.addItem(6, 1)\
-		.addItem(8, 1)\
-		.addItem(9, 1),
+		.addItem(ITEM_SHED_KEY, 1)\
+		.addItem(ITEM_THINKPAD, 1),
 
-		//first Room:
+		//second Room:
 		Area("Another Room", "wow another room!", "(*___*)")\
 		.addOption("Go back", 0)\
 		.addOption("Stay here...", 1)

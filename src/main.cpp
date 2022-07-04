@@ -20,20 +20,10 @@ int main(){
    
    //create our player:
    Player player;
-   //bool openedInventory{false};
 
    //create Items:
    Area::addItem("Key");
-   Area::addItem("Stick");
-   Area::addItem("Caps");
-   Area::addItem("Scrap Metal");
-   Area::addItem("Computer Parts");
-   Area::addItem("Knife");
-   Area::addItem("Pistol");
    Area::addItem("Thinkpad");
-   Area::addItem("Wifi Pineapple");
-   Area::addItem("Armor");
-   Area::addItem("Rubber Ducky");
 
    //create our game world:
    Area* areas = createAreas();
@@ -52,7 +42,6 @@ int main(){
 
 	   //open inventory:
 	   if(tmp == 717){
-		   //openedInventory = 
 		   player.inventory();
 		   tmp = 666;
 	   }

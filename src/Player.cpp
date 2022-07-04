@@ -37,7 +37,7 @@ void Player::dropItem(std::stringstream& commandStream){
     if (commandStream.rdbuf()->in_avail()){
 		commandStream >> itemId;
 	}else{
-        for(unsigned i{0}; i < 15; ++i){
+        for(unsigned i{0}; i < ITEM_SIZE; ++i){
             if(this->items[i] > 0){
                 itemId = i;
                 break;
@@ -52,7 +52,7 @@ void Player::dropItem(std::stringstream& commandStream){
     if (commandStream.rdbuf()->in_avail()) commandStream >> count;
     else count = 1;
     
-    if(itemId > 14) return;
+    if(itemId > ITEM_SIZE-1) return;
     if(count < this->items[itemId]){
         this->items[itemId] -= count;
 		this->hasItems -= count;
@@ -77,16 +77,20 @@ bool Player::inventory(){
     if(!this->hasItems){
         puts("NO ITEMS IN INVENTORY");
         return false;
-    }
-	std::cout << "-----INVENTORY:-----\n";
-	for(unsigned i{0}; i < 15; ++i){
-		//print item information
-		if(items[i]) printf("[%d] %dx %s\n", i, items[i], itemNames[i]);
+    }else{
+		puts(" ---------------------INVENTORY:---------------------------- ");
+		for(unsigned i{0}; i < 15; ++i){
+			//print item information
+			if(items[i]) printf("[%d] %dx %s\n", i, items[i], itemNames[i]);
+		}
+		puts(" ----------------------------------------------------------- ");
 	}
-	std::cout << "You can: \"use <id>\" or \"drop <id>\"\n-------------------\n";
 	return false;
 }
 
+bool Player::hasItem(unsigned itemId, unsigned itemCount) const{
+	return this->items[itemId] >= itemCount;
+}
 void Player::take(const unsigned& itemId, const char* itemName){
     ++this->hasItems;
 	++items[itemId];
