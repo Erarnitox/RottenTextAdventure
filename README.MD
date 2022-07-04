@@ -31,9 +31,10 @@ Alternatively the compiled binary can be found in the `bin` directory.
 - `:` : open console for commands and custom options
 - `t` : take selected item 
 - `s` : choose the selected option
-- `i` : list items in inventory
+- `i` : list items in inventory and open console
 
 #### Commands:
 - `q` : quit the game
-- `drop [itemId] [count]` : drop an Item from inventory
-- `use [itemId] [count]` : use an Item from inventory
+- `drop [itemId][count]` : drop an Item from inventory
+- `use [itemId][count]` : use an Item from inventory
+- `okay` : do nothing and close the console 
